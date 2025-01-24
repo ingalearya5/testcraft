@@ -2,8 +2,16 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sparkles, PenTool, Download, ArrowRight } from "lucide-react";
 import { SignInButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+  const { userId } = await auth();
+
+  if (userId != null) {
+    redirect("/home");
+  }
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <section className="text-center py-20 px-4 sm:px-6 lg:px-8 mt-16">
@@ -22,9 +30,16 @@ export default function Home() {
             fingertips.
           </p>
           <div className="mt-10 flex justify-center space-x-4">
-            <Button className="group text-lg px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg">
-              <SignInButton>Start Crafting</SignInButton>
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            <Button
+              asChild
+              className="group text-lg px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg"
+            >
+              <SignInButton>
+                <div className="flex items-center">
+                  Start Crafting
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </SignInButton>
             </Button>
             <Button
               variant="outline"
@@ -36,8 +51,6 @@ export default function Home() {
         </div>
       </section>
 
-      
-      
       <section className="py-20 bg-white/80 backdrop-blur-sm w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
